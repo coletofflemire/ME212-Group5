@@ -1,29 +1,39 @@
+clear;
+clc;
+
 %define link lengths
 r1 = 0.1;
 r2 = 0.055;
 r3 = 0.15;
 r4 = 0.11;
 
+glob_const = 200;
 %define theta 2 range from 0 to 2 Pi
-theta2 = linspace(0,2*pi,100);
-alpha = linspace(0,0,100);
-beta = linspace(0,0,100);
+theta2 = linspace(0,2*pi,glob_const);
+alpha = linspace(0,0,glob_const);
+beta = linspace(0,0,glob_const);
 
-for i = 1:100
+for i = 1:glob_const
     %use cosine law to find alpha
-    alpha(i) = acos(((r1^2) - r1.*r2.*cos(theta2(i)))/(r1.*sqrt(r1^2 + r2^2 - 2*r1*r2.*cos(theta2(i)))));
+    alpha(i) = acos(((r1^2) - r1*r2*cos(theta2(i)))/(r1.*sqrt(r1^2 + r2^2 - 2*r1*r2*cos(theta2(i)))));
 
     %use cosine law to find beta
-    beta(i) = acos((r1^2 + r2^2 - 2.*r1.*r2.*cos(theta2(i)) + r4^2 - r3^2)/ (2.*r4.*sqrt(r1^2 + r2^2 - 2.*r1.*r2.*cos(theta2(i)))));
+    beta(i) = acos((r1^2 + r2^2 - 2*r1*r2*cos(theta2(i)) + r4^2 - r3^2)/ (2*r4*sqrt(r1^2 + r2^2 - 2*r1*r2*cos(theta2(i)))));
 end
+alpha(1) = 0;
+alpha(glob_const) = 0;
 
 %use the angles obtained to find theta4, then find 1st and 2nd direvative
-theta4 = pi - alpha - beta;
+for i = 1:glob_const
+    theta4(i) = pi - alpha(i) - beta(i);
+end
+
 theta4_dot = gradient(theta4);
 theta4_dot_dot = gradient(theta4_dot);
 
 %use geometry to find theta3, then differentiate for 1st and 2nd derivative
 theta3 = asin((1/r3)*(r4*sin(theta4) - r2*sin(theta2)));
+theta3 = abs(theta3);
 theta3_dot = gradient(theta3);
 theta3_dot_dot = gradient(theta3_dot);
 
