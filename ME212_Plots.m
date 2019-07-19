@@ -7,10 +7,11 @@ r2 = 55;
 r3 = 150;
 r4 = 120;
 
-global_const = 100;
+%define a global constant for the universial size of all vectors
+global_const = 1000;
 
-%define theta2 range from 0 to 2 Pi, and theta3, theta4 as a vectors of
-%same size
+%define theta2 range from 0 to 2 Pi, theta3, theta4, theta3_dot,
+%theta4_dot, theta3_dot_dot, theta4_dot_dot as a vectors of same size
 theta2 = linspace(0,2*pi,global_const);
 theta3 = linspace(0,0,global_const);
 theta4 = linspace(0,0,global_const);
@@ -19,9 +20,8 @@ theta4_dot = linspace(0,0,global_const);
 theta3_dot_dot = linspace(0,0,global_const);
 theta4_dot_dot = linspace(0,0,global_const);
 
-%define angular velocity of theta2 as 40 rad/s
+%define angular velocity of theta2 of 40 rad/s, angular acceleration of 0
 theta2_dot = 40;
-
 theta2_dot_dot = 0;
 
 %define constants h1,h2,h3,h4, and h5 used in a,b,c,d, and e calculations
@@ -40,7 +40,7 @@ for j = 1:global_const
     e(j) = h1 - (1 + h3)*cos(theta2(j)) + h5;
 end
 
-%Define equations for theta3 nd theta4
+%Define equations for displacement, velocity and acceleration
 for i = 1:global_const
     theta3(i) = 2*atan((-b(i)-sqrt((b(i)^2)-4*a(i)*c(i)))/(2*a(i)));
     theta4(i) = 2*atan((-b(i)-sqrt(b(i)^2-4*d(i)*e(i)))/(2*d(i)));
