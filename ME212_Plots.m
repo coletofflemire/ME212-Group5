@@ -2,17 +2,27 @@ clear;
 clc;
 
 %define link lengths
-r1 = 0.1;
-r2 = 0.055;
-r3 = 0.15;
-r4 = 0.12;
+r1 = 100;
+r2 = 55;
+r3 = 150;
+r4 = 120;
 
 global_const = 100;
 
-%define theta2 range from 0 to 2 Pi
+%define theta2 range from 0 to 2 Pi, and theta3, theta4 as a vectors of
+%same size
 theta2 = linspace(0,2*pi,global_const);
 theta3 = linspace(0,0,global_const);
 theta4 = linspace(0,0,global_const);
+theta3_dot = linspace(0,0,global_const);
+theta4_dot = linspace(0,0,global_const);
+theta3_dot_dot = linspace(0,0,global_const);
+theta4_dot_dot = linspace(0,0,global_const);
+
+%define angular velocity of theta2 as 40 rad/s
+theta2_dot = 40;
+
+theta2_dot_dot = 0;
 
 %define constants h1,h2,h3,h4, and h5 used in a,b,c,d, and e calculations
 h1 = r1/r2;
@@ -30,22 +40,15 @@ for j = 1:global_const
     e(j) = h1 - (1 + h3)*cos(theta2(j)) + h5;
 end
 
-%Define equations for theta3
+%Define equations for theta3 nd theta4
 for i = 1:global_const
     theta3(i) = 2*atan((-b(i)-sqrt((b(i)^2)-4*a(i)*c(i)))/(2*a(i)));
-    theta3_dot = gradient(theta3);
-    theta3_dot_dot = gradient(theta3_dot);
+    theta4(i) = 2*atan((-b(i)-sqrt(b(i)^2-4*d(i)*e(i)))/(2*d(i)));
+    theta3_dot(i) = (r2*theta2_dot/r3)*((sin(theta2(i)-theta4(i)))/(sin(theta4(i)-theta3(i))));
+    theta4_dot(i) = (r2*theta2_dot/r4)*((sin(theta2(i)-theta3(i)))/(sin(theta4(i)-theta3(i))));
+    theta3_dot_dot(i) = (r4*(theta4_dot(i)^2) - r3*cos(theta3(i) - theta4(i))*(theta3_dot(i)^2) - r2*sin(theta2(i) - theta4(i))*(theta2_dot_dot) - r2*(theta2_dot^2)*cos(theta2(i) - theta4(i)))/(r3*sin(theta3(i) - theta4(i)));
+    theta4_dot_dot(i) = (-r3*(theta3_dot(i)^2) + r4*cos(theta3(i) - theta4(i))*(theta4_dot(i)^2) - r2*sin(theta2(i) - theta3(i))*(theta2_dot_dot) - r2*(theta2_dot^2)*cos(theta2(i) - theta3(i)))/(r4*sin(theta3(i) - theta4(i)));
 end
-
-%Define equations for theta4
-for k = 1:global_const
-    theta4(k) = 2*atan((-b(k)-sqrt(b(k)^2-4*d(k)*e(k)))/(2*d(k)));
-    theta4_dot = gradient(theta4);
-    theta4_dot_dot = gradient(theta4_dot);
-end
-%theta4 = 2.*atan((-b+sqrt(b.^2-4.*d.*e))/(2.*d));
-%theta4_dot = gradient(theta4);
-%theta4_dot_dot = gradient(theta4_dot);
 
 %plot theta3 and theta4 together versus theta2
 figure(1)
@@ -75,7 +78,7 @@ plot(theta2, theta3_dot_dot, 'r')
 hold on;
 plot(theta2, theta4_dot_dot, 'g')
 hold on;
-title('Angular Accelleration of Theta 3 and Theta 4 vs. Angular Displacement of Theta 2')
+title('Angular Acceleration of Theta 3 and Theta 4 vs. Angular Displacement of Theta 2')
 xlabel('Angular Displacement of Theta 2 [rad]')
 ylabel('Angular Acceleration [rad/s^2]')
 legend ('Theta 3', 'Theta 4')
