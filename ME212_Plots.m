@@ -82,4 +82,3 @@ title('Angular Acceleration of Theta 3 and Theta 4 vs. Angular Displacement of T
 xlabel('Angular Displacement of Theta 2 [rad]')
 ylabel('Angular Acceleration [rad/s^2]')
 legend ('Theta 3', 'Theta 4')
-
